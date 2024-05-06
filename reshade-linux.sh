@@ -322,7 +322,7 @@ RESHADE_URL_ALT="http://static.reshade.me"
 
 for REQUIRED_EXECUTABLE in $REQUIRED_EXECUTABLES; do
     if ! which "$REQUIRED_EXECUTABLE" &> /dev/null; then
-        printf -ne "Program '$REQUIRED_EXECUTABLE' is missing, but it is required.\nExiting.\n"
+        printf "Program '$REQUIRED_EXECUTABLE' is missing, but it is required.\nExiting.\n"
         exit 1
     fi
 done
