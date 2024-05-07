@@ -191,11 +191,11 @@ cd "$MAIN_PATH" || exit
 UPDATE_RESHADE=${UPDATE_RESHADE:-1}
 D3DCOMPILER=${D3DCOMPILER:-1}
 
-echo "Do you want to (i)nstall or (u)ninstall ReShade for a game?"
+printf "Do you want to (i)nstall or (u)ninstall ReShade for a game?"
 if [[ $(checkStdin "(i/u): " "^(i|u)$") == "u" ]]; then
     getGamePath
     getSteamID
-    echo "Unlinking ReShade files."
+    printf "Unlinking ReShade files."
     LINKS="$(printf '%s.dll' $COMMON_OVERRIDES) ReShade32.json ReShade64.json Shaders Textures"
     for link in $LINKS; do
         if [[ -L $gamePath/$link ]]; then
@@ -204,7 +204,7 @@ if [[ $(checkStdin "(i/u): " "^(i|u)$") == "u" ]]; then
         fi
     done
     
-    echo "Removing dll overrides."
+    printf "Removing dll overrides."
     checkUserReg "remove overrides for ${COMMON_OVERRIDES// /, })"
     if [[ -f $regFile ]]; then
         for override in $COMMON_OVERRIDES; do
@@ -216,7 +216,7 @@ if [[ $(checkStdin "(i/u): " "^(i|u)$") == "u" ]]; then
             fi
         done
     fi
-    echo "Finished uninstalling ReShade for SteamID $SteamID."
+    Printf "Finished uninstalling ReShade for SteamID $SteamID."
     exit 0
 fi
 
@@ -257,14 +257,14 @@ if [[ ! -f reshade/dxgi.dll ]] || [[ $UPDATE_RESHADE -eq 1 ]]; then
         rm -rf "${RESHADE_PATH:?}"/*
         mv ./* "$RESHADE_PATH/"
         cd "$MAIN_PATH" || exit
-        echo "$RVERS" > VERS
+        printf "$RVERS" > VERS
         rm -rf "$tmpDir"
     fi
 fi
 
 getGamePath
 
-echo "Do you want $0 to attempt to automatically detect the right dll to use for ReShade?"
+printf "Do you want $0 to attempt to automatically detect the right dll to use for ReShade?"
 
 [[ $(checkStdin "(y/n) " "^(y|n)$") == "y" ]] && wantedDll="auto" || wantedDll="manual"
 
@@ -277,14 +277,14 @@ if [[ $wantedDll == "auto" ]]; then
         fi
     done
     [[ $exeArch -eq 32 ]] && wantedDll="d3d9" || wantedDll="dxgi"
-    echo "We have detected the game is $exeArch bits, we will use $wantedDll.dll as the override, is this correct?"
+    printf "We have detected the game is $exeArch bits, we will use $wantedDll.dll as the override, is this correct?"
     if [[ $(checkStdin "(y/n) " "^(y|n)$") == "n" ]]; then
         wantedDll="manual"
     fi
 fi
 
 if [[ $wantedDll == "manual" ]]; then
-    echo "Manually enter the dll override for ReShade, common values are one of: $COMMON_OVERRIDES"
+    printf "Manually enter the dll override for ReShade, common values are one of: $COMMON_OVERRIDES"
     while true; do
         read -rp 'Override: ' wantedDll
         wantedDll=${wantedDll//.dll/}
@@ -306,11 +306,11 @@ fi
 checkUserReg "Add $wantedDll and make sure it is set to  \"native,builtin\"."
 
 if [[ -f $regFile ]] && [[ $(grep -Po "^\"$wantedDll\"=\"native,builtin\"" "$regFile") == "" ]]; then
-    echo "Adding dll override for $wantedDll."
+    Printf "Adding dll override for $wantedDll."
     sed -i "s/^\"\*d3dcompiler_47\"=\"native\"/\0\n\"$wantedDll\"=\"native,builtin\"/" "$regFile"
 fi
 
-echo "Linking ReShade files to game directory."
+Printf "Linking ReShade files to game directory."
 
 if [[ $wantedDll == "d3d9" ]]; then
     ln -is "$(realpath "$RESHADE_PATH"/d3d9.dll)" "$gamePath/"
@@ -325,4 +325,4 @@ ln -is "$(realpath "$MAIN_PATH"/reshade-shaders/Textures)" "$gamePath/"
 ln -is "$(realpath "$MAIN_PATH"/reshade-shaders/Shaders)" "$gamePath/"
 
 echo -e "$SEPERATOR\nDone."
-echo "The next time you start the game, open the ReShade settings, go to the 'Settings' tab, add the Shaders folder location to the 'Effect Search Paths', add the Textures folder to the 'Texture Search Paths', go to the 'Home' tab, click 'Reload'."
+Printf "The next time you start the game, open the ReShade settings, go to the 'Settings' tab, add the Shaders folder location to the 'Effect Search Paths', add the Textures folder to the 'Texture Search Paths', go to the 'Home' tab, click 'Reload'."
