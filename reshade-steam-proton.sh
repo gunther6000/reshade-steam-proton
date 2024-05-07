@@ -127,32 +127,32 @@ function checkStdin() {
             break
         fi
     done
-    echo "$userInput"
+    printf "$userInput"
 }
 
 function getGamePath() {
-    echo 'Supply the folder path where the main executable (exe file) for the game is.'
-    echo 'On default steam settings, look in ~/.local/share/Steam/steamapps/common/'
-    echo '(Control+c to exit)'
+    Printf 'Supply the folder path where the main executable (exe file) for the game is.'
+    printf 'On default steam settings, look in ~/.local/share/Steam/steamapps/common/'
+    printf '(Control+c to exit)'
     while true; do
         read -rp 'Game path: ' gamePath
         eval gamePath="$gamePath"
         gamePath=$(realpath "$gamePath")
         
         if ! ls "$gamePath" > /dev/null 2>&1 || [[ -z $gamePath ]]; then
-            echo "Incorrect or empty path supplied. You supplied \"$gamePath\"."
+            printf "Incorrect or empty path supplied. You supplied \"$gamePath\"."
             continue
         fi
         
         if ! ls "$gamePath/"*.exe > /dev/null 2>&1; then
-            echo "No .exe file found in \"$gamePath\"."
-            echo "Do you still want to use this directory?"
+            printf "No .exe file found in \"$gamePath\"."
+            printf "Do you still want to use this directory?"
             if [[ $(checkStdin "(y/n) " "^(y|n)$") != "y" ]]; then
                 continue
             fi
         fi
         
-        echo "Is this path correct? \"$gamePath\""
+        printf "Is this path correct? \"$gamePath\""
         if [[ $(checkStdin "(y/n) " "^(y|n)$") == "y" ]]; then
             break
         fi
@@ -167,10 +167,10 @@ function getSteamID() {
 function checkUserReg() {
     regFile=~/".local/share/Steam/steamapps/compatdata/$SteamID/pfx/user.reg"
     if [[ ! -f $regFile ]]; then
-        echo "Could not modify or find user.reg file: \"$regFile\""
+        printf "Could not modify or find user.reg file: \"$regFile\""
         regFile=
-        echo "Manually run: protontricks $SteamID winecfg"
-        echo "In the Libraries tab, $1."
+        printf "Manually run: protontricks $SteamID winecfg"
+        printf "In the Libraries tab, $1."
         read -rp 'Press any key to continue.'
     fi
 }
