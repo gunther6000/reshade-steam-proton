@@ -216,9 +216,11 @@ DESCRIPTION
 # $1 is message
 # $2 is exit code
 function printErr() {
+    local message=$1
+    local exit_code=$2
     removeTempDir
-    printf -e "\e[40m\e[31mError: $1\nExiting.\e[0m"
-    [[ -z $2 ]] && exit 1 || exit "$2"
+    echo -e "\e[40m\e[31mError: $message\nExiting.\e[0m"
+    [[ -z $exit_code ]] && exit 1 || exit "$exit_code"
 }
 
 # Check user input
@@ -311,7 +313,7 @@ RESHADE_PATH="$MAIN_PATH/reshade"
 WINE_MAIN_PATH="$(printf "$MAIN_PATH" | awk "s#/home/$USER/##" | awk 's#/#\\\\#g')"
 UPDATE_RESHADE=${UPDATE_RESHADE:-1}
 MERGE_SHADERS=${MERGE_SHADERS:-1}
-VULKAN_SUPPORT=${VULKAN_SUPPORT:-1}
+VULKAN_SUPPORT=${VULKAN_SUPPORT:-0}
 GLOBAL_INI=${GLOBAL_INI:-"ReShade.ini"}
 SHADER_REPOS=${SHADER_REPOS:-"https://github.com/CeeJayDK/SweetFX|sweetfx-shaders;https://github.com/BlueSkyDefender/AstrayFX|astrayfx-shaders;https://github.com/prod80/prod80-ReShade-Repository|prod80-shaders;https://github.com/crosire/reshade-shaders|reshade-shaders|slim;https://github.com/martymcmodding/iMMERSE|iMMERSE-SHADERS"}
 RESHADE_VERSION=${RESHADE_VERSION:-"latest"}
