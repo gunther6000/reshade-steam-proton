@@ -249,14 +249,13 @@ function getGamePath() {
     printf '(Control+c to exit)'
     while true; do
         read -rp 'Game path: ' gamePath
-        eval gamePath="$gamePath" &> /dev/null
-        gamePath=$(realpath "$gamePath")
+        gamePath=$(readlink -f "$gamePath")
         [[ -f $gamePath ]] && gamePath=$(dirname "$gamePath")
-        if ! ls "$gamePath" > /dev/null 2>&1 || [[ -z $gamePath ]]; then
+        if ! test -d "$gamePath" || [[ -z $gamePath ]]; then
             printf "Incorrect or empty path supplied. You supplied \"$gamePath\"."
             continue
         fi
-        if ! ls "$gamePath/"*.exe > /dev/null 2>&1; then
+        if ! test -f "$gamePath"/*.exe; then
             printf "No .exe file found in \"$gamePath\"."
             printf "Do you still want to use this directory?"
             [[ $(checkStdin "(y/n) " "^(y|n)$") != "y" ]] && continue
