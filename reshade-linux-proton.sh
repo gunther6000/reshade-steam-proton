@@ -227,13 +227,20 @@ function printErr() {
 # $1 is valid values to display to user
 # $2 is regex
 function checkStdin() {
+    attempts=0
     while true; do
         read -rp "$1" userInput
         if [[ $userInput =~ $2 ]]; then
             break
+            else
+            ((attempts++))
+            if [[ $attempts -ge 5 ]]; then
+                echo "Invalid input. Exiting."
+                exit 1
+            fi
         fi
     done
-    printf "$userInput"
+    echo "$userInput"
 }
 
 # Try to get game directory from user.
