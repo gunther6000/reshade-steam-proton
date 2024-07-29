@@ -34,8 +34,3 @@ Since 3.12.6, [gamescope](https://github.com/ValveSoftware/gamescope) supports a
 ### vkBasalt through gamescope:
 
 Since gamescope can use Vulkan, you can run vkBasalt on gamescope itself, instead of on the game.
-
-## Misc
-`reshade-linux.sh` is a newer script which works with any Windows game running under wine or proton.  
-`reshade-linux-flatpak.sh` is a script which executes `reshade-linux.sh` with the correct path for Steam installed from Flatpak.  
-`reshade-steam-proton.sh` (obsolete - will be removed eventually) is a older script which relies on protontricks / only works with Steam.
